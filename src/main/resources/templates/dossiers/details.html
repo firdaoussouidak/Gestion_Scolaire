@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Détails du Dossier - Gestion Scolaire</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #34495e;
+      --accent-color: #3498db;
+      --accent-secondary: #2980b9;
+      --success-color: #27ae60;
+      --warning-color: #f39c12;
+      --light-bg: #f8f9fa;
+      --light-gray: #ecf0f1;
+      --medium-gray: #bdc3c7;
+      --dark-gray: #7f8c8d;
+      --card-border: #e0e6ed;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.08);
+      --border-radius: 8px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background-color: #f9fafb;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+
+    /* Navigation */
+    .navbar {
+      background-color: white;
+      box-shadow: var(--shadow-sm);
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: var(--primary-color) !important;
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar-brand i {
+      margin-right: 10px;
+      color: var(--accent-color);
+    }
+
+    .nav-link {
+      color: var(--secondary-color) !important;
+      font-weight: 500;
+      padding: 0.5rem 1rem !important;
+      margin: 0 2px;
+      border-radius: var(--border-radius);
+      transition: all 0.2s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--accent-color) !important;
+      background-color: rgba(52, 152, 219, 0.05);
+    }
+
+    .nav-link.active {
+      color: var(--accent-color) !important;
+      background-color: rgba(52, 152, 219, 0.1);
+      font-weight: 600;
+    }
+
+    /* Page Header */
+    .page-header {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      padding: 2.5rem 0 2rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .page-title {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      font-size: 2rem;
+    }
+
+    .page-subtitle {
+      color: var(--dark-gray);
+      font-size: 1rem;
+      max-width: 700px;
+    }
+
+    /* Cards */
+    .detail-card {
+      background-color: white;
+      border: 1px solid var(--card-border);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .card-header {
+      background-color: white;
+      border-bottom: 1px solid var(--light-gray);
+      padding: 1.5rem;
+    }
+
+    .card-header h4 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    /* Buttons */
+    .btn-warning {
+      background-color: var(--warning-color);
+      border-color: var(--warning-color);
+      color: white;
+      font-weight: 500;
+      padding: 0.5rem 1.25rem;
+      border-radius: var(--border-radius);
+      transition: all 0.2s ease;
+    }
+
+    .btn-warning:hover {
+      background-color: #e67e22;
+      border-color: #e67e22;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(243, 156, 18, 0.2);
+    }
+
+    .btn-secondary {
+      background-color: white;
+      border-color: var(--light-gray);
+      color: var(--dark-gray);
+      font-weight: 500;
+      padding: 0.5rem 1.25rem;
+      border-radius: var(--border-radius);
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--light-bg);
+      border-color: var(--medium-gray);
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background-color: var(--accent-color);
+      border-color: var(--accent-color);
+      color: white;
+      font-weight: 500;
+      padding: 0.5rem 1.25rem;
+      border-radius: var(--border-radius);
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-secondary);
+      border-color: var(--accent-secondary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(52, 152, 219, 0.2);
+    }
+
+    .btn-success {
+      background-color: var(--success-color);
+      border-color: var(--success-color);
+      color: white;
+      font-weight: 500;
+      padding: 0.5rem 1.25rem;
+      border-radius: var(--border-radius);
+      transition: all 0.2s ease;
+    }
+
+    .btn-success:hover {
+      background-color: #219653;
+      border-color: #219653;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(39, 174, 96, 0.2);
+    }
+
+    .btn-outline-success {
+      color: var(--success-color);
+      border-color: var(--success-color);
+    }
+
+    .btn-outline-success:hover {
+      background-color: var(--success-color);
+      color: white;
+    }
+
+    /* Info Tables */
+    .info-table {
+      width: 100%;
+    }
+
+    .info-table th {
+      width: 40%;
+      font-weight: 600;
+      color: var(--primary-color);
+      padding: 0.75rem 0;
+      vertical-align: top;
+    }
+
+    .info-table td {
+      color: var(--secondary-color);
+      padding: 0.75rem 0;
+      vertical-align: top;
+    }
+
+    .info-table tr:not(:last-child) {
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    /* Badges */
+    .badge {
+      font-weight: 500;
+      padding: 0.5em 0.75em;
+      border-radius: 20px;
+    }
+
+    .badge.bg-info {
+      background-color: rgba(52, 152, 219, 0.1) !important;
+      color: var(--accent-color);
+    }
+
+    .badge.bg-secondary {
+      background-color: rgba(189, 195, 199, 0.1) !important;
+      color: var(--dark-gray);
+    }
+
+    .badge.bg-warning {
+      background-color: rgba(243, 156, 18, 0.1) !important;
+      color: var(--warning-color);
+    }
+
+    .badge.bg-success {
+      background-color: rgba(39, 174, 96, 0.1) !important;
+      color: var(--success-color);
+    }
+
+    .badge.bg-danger {
+      background-color: rgba(231, 76, 60, 0.1) !important;
+      color: #e74c3c;
+    }
+
+    /* Alerts */
+    .alert-success {
+      background-color: rgba(39, 174, 96, 0.05);
+      border: 1px solid rgba(39, 174, 96, 0.1);
+      border-radius: var(--border-radius);
+      color: var(--success-color);
+    }
+
+    .alert-danger {
+      background-color: rgba(231, 76, 60, 0.05);
+      border: 1px solid rgba(231, 76, 60, 0.1);
+      border-radius: var(--border-radius);
+      color: #e74c3c;
+    }
+
+    /* Course Cards */
+    .course-card {
+      background-color: var(--light-bg);
+      border: 1px solid var(--light-gray);
+      border-radius: var(--border-radius);
+      padding: 1.25rem;
+      height: 100%;
+      transition: all 0.2s ease;
+    }
+
+    .course-card:hover {
+      border-color: var(--accent-color);
+      box-shadow: var(--shadow-md);
+    }
+
+    .course-card h5 {
+      margin-bottom: 0.5rem;
+      color: var(--primary-color);
+    }
+
+    .course-card h6 {
+      color: var(--dark-gray);
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+
+    .course-card p {
+      color: var(--dark-gray);
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--dark-gray);
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: var(--medium-gray);
+    }
+
+    /* Quick Actions */
+    .action-btn {
+      display: block;
+      text-align: center;
+      padding: 1rem;
+      background-color: white;
+      border: 1px solid var(--light-gray);
+      border-radius: var(--border-radius);
+      color: inherit;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      margin-bottom: 0.75rem;
+    }
+
+    .action-btn:hover {
+      border-color: var(--accent-color);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .action-btn i {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: var(--accent-color);
+    }
+
+    .action-btn h5 {
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .action-btn small {
+      color: var(--dark-gray);
+      font-size: 0.85rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .page-header {
+        padding: 2rem 0 1.5rem;
+      }
+
+      .page-title {
+        font-size: 1.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      Gestion Scolaire
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">
+            <i class="bi bi-house-door me-1"></i> Accueil
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/eleves">
+            <i class="bi bi-people me-1"></i> Élèves
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/filieres">
+            <i class="bi bi-diagram-3 me-1"></i> Filières
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/cours">
+            <i class="bi bi-journal-bookmark me-1"></i> Cours
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/dossiers">
+            <i class="bi bi-folder-check me-1"></i> Dossiers
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<section class="page-header">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-start">
+      <div>
+        <h1 class="page-title">
+          <i class="bi bi-folder-check text-primary me-2"></i>
+          Détails du Dossier Administratif
+        </h1>
+        <p class="page-subtitle">
+          Informations complètes sur le document officiel de l'élève
+        </p>
+      </div>
+      <div>
+        <a th:href="@{/dossiers/edit/{id}(id=${dossier.id})}"
+           class="btn btn-warning me-2">
+          <i class="bi bi-pencil me-2"></i>Modifier
+        </a>
+        <a href="/dossiers" class="btn btn-secondary">
+          <i class="bi bi-arrow-left me-2"></i>Retour
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <!-- Informations du dossier -->
+  <div class="detail-card">
+    <div class="card-header">
+      <h4>
+        <i class="bi bi-card-checklist me-2"></i>Informations du Dossier
+      </h4>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <table class="info-table">
+            <tr>
+              <th>ID :</th>
+              <td><span class="text-muted" th:text="${dossier.id}"></span></td>
+            </tr>
+            <tr>
+              <th>Numéro d'inscription :</th>
+              <td>
+                <span class="badge bg-info fs-6" th:text="${dossier.numeroInscription}"></span>
+              </td>
+            </tr>
+            <tr>
+              <th>Date de création :</th>
+              <td th:text="${dossier.dateCreationFormatted}"></td>
+            </tr>
+          </table>
+        </div>
+        <div class="col-md-6">
+          <div class="text-center">
+            <div class="display-6 text-primary mb-3">
+              <i class="bi bi-file-earmark-text"></i>
+            </div>
+            <h5>Document Officiel</h5>
+            <p class="text-muted">Dossier administratif de l'élève</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8">
+      <!-- Informations de l'élève -->
+      <div th:if="${dossier.eleve}" class="detail-card mb-4">
+        <div class="card-header">
+          <h4>
+            <i class="bi bi-person-badge me-2"></i>Informations de l'Élève
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-8">
+              <table class="info-table">
+                <tr>
+                  <th>ID :</th>
+                  <td><span class="text-muted" th:text="${dossier.eleve.id}"></span></td>
+                </tr>
+                <tr>
+                  <th>Nom :</th>
+                  <td th:text="${dossier.eleve.nom}"></td>
+                </tr>
+                <tr>
+                  <th>Prénom :</th>
+                  <td th:text="${dossier.eleve.prenom}"></td>
+                </tr>
+                <tr>
+                  <th>Filière :</th>
+                  <td>
+                                        <span th:if="${dossier.eleve.filiere}" class="badge bg-secondary">
+                                            <i class="bi bi-diagram-3 me-1"></i>
+                                            <span th:text="${dossier.eleve.filiere.nom}"></span>
+                                            (<span th:text="${dossier.eleve.filiere.code}"></span>)
+                                        </span>
+                    <span th:unless="${dossier.eleve.filiere}" class="badge bg-warning">
+                                            Non assigné
+                                        </span>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Nombre de cours :</th>
+                  <td>
+                                        <span class="badge bg-info">
+                                            <i class="bi bi-journal-bookmark me-1"></i>
+                                            <span th:text="${#lists.size(dossier.eleve.coursSuivis)}"></span>
+                                        </span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div class="col-md-4">
+              <div class="alert-success p-4 text-center">
+                <i class="bi bi-person-circle display-4 d-block mb-3"></i>
+                <a th:href="@{/eleves/details/{id}(id=${dossier.eleve.id})}"
+                   class="btn btn-outline-success">
+                  <i class="bi bi-arrow-right-circle me-2"></i>
+                  Voir l'élève
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Liste des cours de l'élève -->
+      <div th:if="${dossier.eleve && !#lists.isEmpty(dossier.eleve.coursSuivis)}"
+           class="detail-card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4>
+            <i class="bi bi-journal-bookmark me-2"></i>Cours Suivis par l'Élève
+            <span class="badge bg-warning ms-2"
+                  th:text="${#lists.size(dossier.eleve.coursSuivis)}"></span>
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div th:each="cours : ${dossier.eleve.coursSuivis}"
+                 class="col-md-6 mb-3">
+              <div class="course-card">
+                <h5>
+                  <i class="bi bi-book me-2"></i>
+                  <span th:text="${cours.code}"></span>
+                </h5>
+                <h6 th:text="${cours.intitule}"></h6>
+                <p class="mb-2">
+                  <small>
+                    <i class="bi bi-diagram-3 me-1"></i>
+                    Filière :
+                    <span th:if="${cours.filiere}"
+                          th:text="${cours.filiere.nom}"
+                          class="badge bg-info">
+                                        </span>
+                    <span th:unless="${cours.filiere}"
+                          class="badge bg-warning">
+                                            Non assigné
+                                        </span>
+                  </small>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Message si pas d'élève -->
+      <div th:unless="${dossier.eleve}" class="detail-card mb-4">
+        <div class="card-header">
+          <h4>
+            <i class="bi bi-exclamation-triangle me-2"></i>Avertissement
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="alert-danger p-4">
+            <div class="text-center">
+              <i class="bi bi-person-x display-4 d-block mb-3"></i>
+              <h4>Dossier non assigné</h4>
+              <p class="mb-4">
+                Ce dossier administratif n'est actuellement associé à aucun élève.
+                Vous pouvez l'assigner à un élève en le modifiant.
+              </p>
+              <a th:href="@{/dossiers/edit/{id}(id=${dossier.id})}"
+                 class="btn btn-primary">
+                <i class="bi bi-person-plus me-2"></i>Assigner un élève
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <!-- Actions Rapides -->
+      <div class="detail-card">
+        <div class="card-header">
+          <h4>
+            <i class="bi bi-lightning-charge me-2"></i>Actions Rapides
+          </h4>
+        </div>
+        <div class="card-body">
+          <div th:if="${dossier.eleve}">
+            <a th:href="@{/eleves/edit/{id}(id=${dossier.eleve.id})}"
+               class="action-btn">
+              <i class="bi bi-person-gear"></i>
+              <h5>Modifier l'élève</h5>
+              <small>Modifier les informations de l'élève</small>
+            </a>
+
+            <a th:if="${dossier.eleve?.filiere}"
+               th:href="@{/filieres/details/{id}(id=${dossier.eleve.filiere.id})}"
+               class="action-btn">
+              <i class="bi bi-diagram-3"></i>
+              <h5>Voir la filière</h5>
+              <small>Consulter les détails de la filière</small>
+            </a>
+          </div>
+
+          <a href="/dossiers" class="action-btn">
+            <i class="bi bi-list-ul"></i>
+            <h5>Liste des dossiers</h5>
+            <small>Retour à la liste complète</small>
+          </a>
+
+          <a href="/eleves" class="action-btn">
+            <i class="bi bi-people"></i>
+            <h5>Liste des élèves</h5>
+            <small>Voir tous les élèves</small>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

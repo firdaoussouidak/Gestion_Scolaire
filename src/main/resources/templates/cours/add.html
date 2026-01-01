@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ajouter un Cours - Gestion Scolaire</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #34495e;
+      --accent-color: #3498db;
+      --accent-secondary: #2980b9;
+      --success-color: #27ae60;
+      --warning-color: #f39c12;
+      --light-bg: #f8f9fa;
+      --light-gray: #ecf0f1;
+      --medium-gray: #bdc3c7;
+      --dark-gray: #7f8c8d;
+      --card-border: #e0e6ed;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.08);
+      --border-radius: 8px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background-color: #f9fafb;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+
+    /* Navigation */
+    .navbar {
+      background-color: white;
+      box-shadow: var(--shadow-sm);
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: var(--primary-color) !important;
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar-brand i {
+      margin-right: 10px;
+      color: var(--accent-color);
+    }
+
+    .nav-link {
+      color: var(--secondary-color) !important;
+      font-weight: 500;
+      padding: 0.5rem 1rem !important;
+      margin: 0 2px;
+      border-radius: var(--border-radius);
+      transition: all 0.2s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--accent-color) !important;
+      background-color: rgba(52, 152, 219, 0.05);
+    }
+
+    .nav-link.active {
+      color: var(--accent-color) !important;
+      background-color: rgba(52, 152, 219, 0.1);
+      font-weight: 600;
+    }
+
+    /* Page Header */
+    .page-header {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      padding: 2.5rem 0 2rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .page-title {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      font-size: 2rem;
+    }
+
+    .page-subtitle {
+      color: var(--dark-gray);
+      font-size: 1rem;
+      max-width: 700px;
+    }
+
+    /* Form Card */
+    .form-card {
+      background-color: white;
+      border: 1px solid var(--card-border);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
+    .card-header {
+      background-color: white;
+      border-bottom: 1px solid var(--light-gray);
+      padding: 1.5rem;
+    }
+
+    .card-header h4 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+    }
+
+    .card-body {
+      padding: 2rem;
+    }
+
+    /* Form Styles */
+    .form-label {
+      font-weight: 500;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-control, .form-select {
+      border: 1px solid var(--light-gray);
+      border-radius: var(--border-radius);
+      padding: 0.625rem 1rem;
+      transition: all 0.2s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+
+    /* Alerts */
+    .alert-light {
+      background-color: rgba(248, 249, 250, 0.8);
+      border: 1px solid var(--light-gray);
+      border-radius: var(--border-radius);
+      color: var(--dark-gray);
+    }
+
+    /* Buttons */
+    .btn-primary {
+      background-color: var(--accent-color);
+      border-color: var(--accent-color);
+      color: white;
+      font-weight: 500;
+      padding: 0.625rem 1.5rem;
+      border-radius: var(--border-radius);
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-secondary);
+      border-color: var(--accent-secondary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(52, 152, 219, 0.2);
+    }
+
+    .btn-secondary {
+      background-color: white;
+      border-color: var(--light-gray);
+      color: var(--dark-gray);
+      font-weight: 500;
+      padding: 0.625rem 1.5rem;
+      border-radius: var(--border-radius);
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--light-bg);
+      border-color: var(--medium-gray);
+      transform: translateY(-2px);
+    }
+
+    /* Help Text */
+    .help-text {
+      color: var(--dark-gray);
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .page-header {
+        padding: 2rem 0 1.5rem;
+      }
+
+      .page-title {
+        font-size: 1.75rem;
+      }
+
+      .card-body {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      Gestion Scolaire
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">
+            <i class="bi bi-house-door me-1"></i> Accueil
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/eleves">
+            <i class="bi bi-people me-1"></i> Élèves
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/filieres">
+            <i class="bi bi-diagram-3 me-1"></i> Filières
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/cours">
+            <i class="bi bi-journal-bookmark me-1"></i> Cours
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/dossiers">
+            <i class="bi bi-folder-check me-1"></i> Dossiers
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<section class="page-header">
+  <div class="container">
+    <div>
+      <h1 class="page-title">
+        <i class="bi bi-journal-plus text-primary me-2"></i>Ajouter un nouveau cours
+      </h1>
+      <p class="page-subtitle">
+        Créez un nouveau programme d'enseignement pour organiser les apprentissages
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="form-card">
+        <div class="card-header">
+          <h4>
+            <i class="bi bi-journal-fill me-2"></i>Informations du cours
+          </h4>
+        </div>
+        <div class="card-body">
+          <form th:action="@{/cours/add}" th:object="${cours}" method="post">
+            <!-- Code du cours -->
+            <div class="mb-4">
+              <label for="code" class="form-label">
+                <i class="bi bi-tag me-1"></i>Code *
+              </label>
+              <input type="text" class="form-control" id="code"
+                     th:field="*{code}" required
+                     placeholder="Ex: JAVA101, MATH201, PHYS301...">
+              <div class="help-text">
+                Le code doit être unique et court
+              </div>
+            </div>
+
+            <!-- Intitulé du cours -->
+            <div class="mb-4">
+              <label for="intitule" class="form-label">
+                <i class="bi bi-card-heading me-1"></i>Intitulé *
+              </label>
+              <input type="text" class="form-control" id="intitule"
+                     th:field="*{intitule}" required
+                     placeholder="Ex: Programmation Java, Mathématiques Avancées...">
+            </div>
+
+            <!-- Filière -->
+            <div class="mb-4">
+              <label for="filiereId" class="form-label">
+                <i class="bi bi-diagram-3 me-1"></i>Filière
+              </label>
+              <select class="form-select" id="filiereId" name="filiereId">
+                <option value="">Sélectionner une filière (optionnel)...</option>
+                <option th:each="filiere : ${filieres}"
+                        th:value="${filiere.id}"
+                        th:text="${filiere.code + ' - ' + filiere.nom}">
+                </option>
+              </select>
+              <div class="help-text">
+                Vous pourrez rattacher le cours à une filière plus tard si nécessaire
+              </div>
+            </div>
+
+            <!-- Information sur la création -->
+            <div class="alert-light border p-3 mb-4">
+              <h6 class="mb-2">
+                <i class="bi bi-info-circle text-primary me-2"></i>À propos des cours
+              </h6>
+              <p class="mb-0 small">
+                Les cours représentent les unités d'enseignement du programme scolaire.
+                Chaque cours peut être rattaché à une filière et être suivi par plusieurs élèves.
+              </p>
+            </div>
+
+            <!-- Boutons -->
+            <div class="d-flex justify-content-between pt-3 border-top">
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-circle me-2"></i>Créer le cours
+              </button>
+              <a href="/cours" class="btn btn-secondary">
+                <i class="bi bi-x-circle me-2"></i>Annuler
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

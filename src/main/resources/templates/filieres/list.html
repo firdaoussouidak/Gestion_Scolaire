@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liste des Filières - Gestion Scolaire</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #34495e;
+      --accent-color: #3498db;
+      --accent-secondary: #2980b9;
+      --success-color: #27ae60;
+      --warning-color: #f39c12;
+      --light-bg: #f8f9fa;
+      --light-gray: #ecf0f1;
+      --medium-gray: #bdc3c7;
+      --dark-gray: #7f8c8d;
+      --card-border: #e0e6ed;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.08);
+      --border-radius: 8px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background-color: #f9fafb;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+
+    /* Navigation */
+    .navbar {
+      background-color: white;
+      box-shadow: var(--shadow-sm);
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: var(--primary-color) !important;
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar-brand i {
+      margin-right: 10px;
+      color: var(--accent-color);
+    }
+
+    .nav-link {
+      color: var(--secondary-color) !important;
+      font-weight: 500;
+      padding: 0.5rem 1rem !important;
+      margin: 0 2px;
+      border-radius: var(--border-radius);
+      transition: all 0.2s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--accent-color) !important;
+      background-color: rgba(52, 152, 219, 0.05);
+    }
+
+    .nav-link.active {
+      color: var(--accent-color) !important;
+      background-color: rgba(52, 152, 219, 0.1);
+      font-weight: 600;
+    }
+
+    /* Page Header */
+    .page-header {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      padding: 2.5rem 0 2rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .page-title {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      font-size: 2rem;
+    }
+
+    .page-subtitle {
+      color: var(--dark-gray);
+      font-size: 1rem;
+      max-width: 700px;
+    }
+
+    /* Cards */
+    .main-card {
+      background-color: white;
+      border: 1px solid var(--card-border);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .card-header {
+      background-color: white;
+      border-bottom: 1px solid var(--light-gray);
+      padding: 1.25rem 1.5rem;
+    }
+
+    .card-header h4 {
+      margin: 0;
+      font-size: 1.25rem;
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      background-color: var(--accent-color);
+      border-color: var(--accent-color);
+      color: white;
+      font-weight: 500;
+      padding: 0.5rem 1.25rem;
+      border-radius: var(--border-radius);
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-secondary);
+      border-color: var(--accent-secondary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(52, 152, 219, 0.2);
+    }
+
+    .btn-sm {
+      padding: 0.25rem 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    .btn-outline-primary {
+      color: var(--accent-color);
+      border-color: var(--accent-color);
+      font-weight: 500;
+      padding: 0.5rem 1.25rem;
+      border-radius: var(--border-radius);
+      transition: all 0.2s ease;
+    }
+
+    .btn-outline-primary:hover {
+      background-color: var(--accent-color);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .btn-outline-warning {
+      color: var(--warning-color);
+      border-color: var(--warning-color);
+    }
+
+    .btn-outline-warning:hover {
+      background-color: var(--warning-color);
+      color: white;
+    }
+
+    .btn-outline-danger {
+      color: #e74c3c;
+      border-color: #e74c3c;
+    }
+
+    .btn-outline-danger:hover {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    .btn-outline-success {
+      color: var(--success-color);
+      border-color: var(--success-color);
+    }
+
+    .btn-outline-success:hover {
+      background-color: var(--success-color);
+      color: white;
+    }
+
+    /* Table */
+    .table {
+      margin-bottom: 0;
+    }
+
+    .table thead th {
+      background-color: var(--light-bg);
+      border-bottom: 2px solid var(--light-gray);
+      font-weight: 600;
+      color: var(--primary-color);
+      padding: 1rem;
+    }
+
+    .table tbody td {
+      padding: 1rem;
+      vertical-align: middle;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .table tbody tr:hover {
+      background-color: rgba(52, 152, 219, 0.02);
+    }
+
+    /* Badges */
+    .badge {
+      font-weight: 500;
+      padding: 0.35em 0.65em;
+      border-radius: 20px;
+    }
+
+    .badge.bg-info {
+      background-color: rgba(52, 152, 219, 0.1) !important;
+      color: var(--accent-color);
+    }
+
+    .badge.bg-secondary {
+      background-color: rgba(189, 195, 199, 0.1) !important;
+      color: var(--dark-gray);
+    }
+
+    .badge.bg-success {
+      background-color: rgba(39, 174, 96, 0.1) !important;
+      color: var(--success-color);
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--dark-gray);
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: var(--medium-gray);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .page-header {
+        padding: 2rem 0 1.5rem;
+      }
+
+      .page-title {
+        font-size: 1.75rem;
+      }
+
+      .btn-group .btn {
+        margin-bottom: 0.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      Gestion Scolaire
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">
+            <i class="bi bi-house-door me-1"></i> Accueil
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/eleves">
+            <i class="bi bi-people me-1"></i> Élèves
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/filieres">
+            <i class="bi bi-diagram-3 me-1"></i> Filières
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/cours">
+            <i class="bi bi-journal-bookmark me-1"></i> Cours
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/dossiers">
+            <i class="bi bi-folder-check me-1"></i> Dossiers
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<section class="page-header">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-start">
+      <div>
+        <h1 class="page-title">
+          <i class="bi bi-diagram-3 text-primary me-2"></i>Liste des Filières
+        </h1>
+        <p class="page-subtitle">
+          Gestion des programmes d'études, organisation pédagogique et composition des filières
+        </p>
+      </div>
+      <a href="/filieres/add" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-2"></i>Ajouter une filière
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <!-- Tableau des filières -->
+  <div class="main-card">
+    <div class="card-header">
+      <h4>
+        <i class="bi bi-table me-2"></i>Filières disponibles
+        <small class="text-muted ms-2" th:text="'(' + ${#lists.size(filieres)} + ')'"></small>
+      </h4>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+          <tr>
+            <th width="60">ID</th>
+            <th>Code</th>
+            <th>Nom</th>
+            <th>Nombre d'Élèves</th>
+            <th>Nombre de Cours</th>
+            <th width="220">Actions</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="filiere : ${filieres}">
+            <td><span class="text-muted" th:text="${filiere.id}"></span></td>
+            <td>
+              <span class="badge bg-info" th:text="${filiere.code}"></span>
+            </td>
+            <td th:text="${filiere.nom}"></td>
+            <td>
+                            <span class="badge bg-secondary">
+                                <i class="bi bi-people me-1"></i>
+                                <span th:text="${#lists.size(filiere.eleves)}"></span>
+                            </span>
+            </td>
+            <td>
+                            <span class="badge bg-secondary">
+                                <i class="bi bi-journal-bookmark me-1"></i>
+                                <span th:text="${#lists.size(filiere.cours)}"></span>
+                            </span>
+            </td>
+            <td>
+              <div class="btn-group" role="group">
+                <a th:href="@{/filieres/details/{id}(id=${filiere.id})}"
+                   class="btn btn-sm btn-outline-primary"
+                   title="Voir détails">
+                  <i class="bi bi-eye"></i>
+                </a>
+                <a th:href="@{/filieres/edit/{id}(id=${filiere.id})}"
+                   class="btn btn-sm btn-outline-warning"
+                   title="Modifier">
+                  <i class="bi bi-pencil"></i>
+                </a>
+                <a th:href="@{/filieres/delete/{id}(id=${filiere.id})}"
+                   class="btn btn-sm btn-outline-danger"
+                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette filière ?')"
+                   title="Supprimer">
+                  <i class="bi bi-trash"></i>
+                </a>
+                <a th:href="@{/eleves/filiere/{id}(id=${filiere.id})}"
+                   class="btn btn-sm btn-outline-success"
+                   title="Voir les élèves">
+                  <i class="bi bi-people"></i>
+                </a>
+                <a th:href="@{/cours/filiere/{id}(id=${filiere.id})}"
+                   class="btn btn-sm btn-outline-primary"
+                   title="Voir les cours">
+                  <i class="bi bi-journal-bookmark"></i>
+                </a>
+              </div>
+            </td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(filieres)}">
+            <td colspan="6">
+              <div class="empty-state">
+                <i class="bi bi-emoji-frown"></i>
+                <h5 class="mt-2 mb-2">Aucune filière trouvée</h5>
+                <p class="mb-0">Commencez par ajouter une nouvelle filière</p>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Détails de l'Élève - Gestion Scolaire</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #34495e;
+      --accent-color: #3498db;
+      --accent-secondary: #2980b9;
+      --success-color: #27ae60;
+      --warning-color: #f39c12;
+      --light-bg: #f8f9fa;
+      --light-gray: #ecf0f1;
+      --medium-gray: #bdc3c7;
+      --dark-gray: #7f8c8d;
+      --card-border: #e0e6ed;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.08);
+      --border-radius: 8px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background-color: #f9fafb;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+
+    /* Navigation */
+    .navbar {
+      background-color: white;
+      box-shadow: var(--shadow-sm);
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: var(--primary-color) !important;
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar-brand i {
+      margin-right: 10px;
+      color: var(--accent-color);
+    }
+
+    .nav-link {
+      color: var(--secondary-color) !important;
+      font-weight: 500;
+      padding: 0.5rem 1rem !important;
+      margin: 0 2px;
+      border-radius: var(--border-radius);
+      transition: all 0.2s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--accent-color) !important;
+      background-color: rgba(52, 152, 219, 0.05);
+    }
+
+    .nav-link.active {
+      color: var(--accent-color) !important;
+      background-color: rgba(52, 152, 219, 0.1);
+      font-weight: 600;
+    }
+
+    /* Page Header */
+    .page-header {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      padding: 2.5rem 0 2rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .page-title {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      font-size: 2rem;
+    }
+
+    .page-subtitle {
+      color: var(--dark-gray);
+      font-size: 1rem;
+      max-width: 700px;
+    }
+
+    /* Cards */
+    .detail-card {
+      background-color: white;
+      border: 1px solid var(--card-border);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .card-header {
+      background-color: white;
+      border-bottom: 1px solid var(--light-gray);
+      padding: 1.5rem;
+    }
+
+    .card-header h4 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      background-color: var(--accent-color);
+      border-color: var(--accent-color);
+      color: white;
+      font-weight: 500;
+      padding: 0.5rem 1.25rem;
+      border-radius: var(--border-radius);
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-secondary);
+      border-color: var(--accent-secondary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(52, 152, 219, 0.2);
+    }
+
+    .btn-warning {
+      background-color: var(--warning-color);
+      border-color: var(--warning-color);
+      color: white;
+      font-weight: 500;
+      padding: 0.5rem 1.25rem;
+      border-radius: var(--border-radius);
+      transition: all 0.2s ease;
+    }
+
+    .btn-warning:hover {
+      background-color: #e67e22;
+      border-color: #e67e22;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(243, 156, 18, 0.2);
+    }
+
+    .btn-secondary {
+      background-color: white;
+      border-color: var(--light-gray);
+      color: var(--dark-gray);
+      font-weight: 500;
+      padding: 0.5rem 1.25rem;
+      border-radius: var(--border-radius);
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--light-bg);
+      border-color: var(--medium-gray);
+      transform: translateY(-2px);
+    }
+
+    /* Info Tables */
+    .info-table {
+      width: 100%;
+    }
+
+    .info-table th {
+      width: 35%;
+      font-weight: 600;
+      color: var(--primary-color);
+      padding: 0.75rem 0;
+      vertical-align: top;
+    }
+
+    .info-table td {
+      color: var(--secondary-color);
+      padding: 0.75rem 0;
+      vertical-align: top;
+    }
+
+    .info-table tr:not(:last-child) {
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    /* Badges */
+    .badge {
+      font-weight: 500;
+      padding: 0.5em 0.75em;
+      border-radius: 20px;
+    }
+
+    .badge.bg-info {
+      background-color: rgba(52, 152, 219, 0.1) !important;
+      color: var(--accent-color);
+    }
+
+    .badge.bg-warning {
+      background-color: rgba(243, 156, 18, 0.1) !important;
+      color: var(--warning-color);
+    }
+
+    .badge.bg-secondary {
+      background-color: rgba(189, 195, 199, 0.1) !important;
+      color: var(--dark-gray);
+    }
+
+    .badge.bg-success {
+      background-color: rgba(39, 174, 96, 0.1) !important;
+      color: var(--success-color);
+    }
+
+    /* Alerts */
+    .alert-success {
+      background-color: rgba(39, 174, 96, 0.05);
+      border: 1px solid rgba(39, 174, 96, 0.1);
+      border-radius: var(--border-radius);
+      color: var(--success-color);
+    }
+
+    .alert-info {
+      background-color: rgba(52, 152, 219, 0.05);
+      border: 1px solid rgba(52, 152, 219, 0.1);
+      border-radius: var(--border-radius);
+      color: var(--accent-color);
+    }
+
+    /* Course Cards */
+    .course-card {
+      background-color: var(--light-bg);
+      border: 1px solid var(--light-gray);
+      border-radius: var(--border-radius);
+      padding: 1.25rem;
+      height: 100%;
+      transition: all 0.2s ease;
+    }
+
+    .course-card:hover {
+      border-color: var(--accent-color);
+      box-shadow: var(--shadow-md);
+    }
+
+    .course-card h5 {
+      margin-bottom: 0.5rem;
+      color: var(--primary-color);
+    }
+
+    .course-card p {
+      color: var(--dark-gray);
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--dark-gray);
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: var(--medium-gray);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .page-header {
+        padding: 2rem 0 1.5rem;
+      }
+
+      .page-title {
+        font-size: 1.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      Gestion Scolaire
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">
+            <i class="bi bi-house-door me-1"></i> Accueil
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/eleves">
+            <i class="bi bi-people me-1"></i> Élèves
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/filieres">
+            <i class="bi bi-diagram-3 me-1"></i> Filières
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/cours">
+            <i class="bi bi-journal-bookmark me-1"></i> Cours
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/dossiers">
+            <i class="bi bi-folder-check me-1"></i> Dossiers
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<section class="page-header">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-start">
+      <div>
+        <h1 class="page-title">
+          <i class="bi bi-person-badge text-primary me-2"></i>
+          Détails de l'élève
+          <span class="text-dark" th:text="${eleve.prenom + ' ' + eleve.nom}"></span>
+        </h1>
+        <p class="page-subtitle">
+          Informations complètes sur l'élève, son dossier administratif et ses cours
+        </p>
+      </div>
+      <div>
+        <a th:href="@{/eleves/edit/{id}(id=${eleve.id})}"
+           class="btn btn-warning me-2">
+          <i class="bi bi-pencil me-2"></i>Modifier
+        </a>
+        <a href="/eleves" class="btn btn-secondary">
+          <i class="bi bi-arrow-left me-2"></i>Retour
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <!-- Informations Personnelles -->
+  <div class="detail-card">
+    <div class="card-header">
+      <h4>
+        <i class="bi bi-person-vcard me-2"></i>Informations Personnelles
+      </h4>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <table class="info-table">
+            <tr>
+              <th>ID :</th>
+              <td><span class="text-muted" th:text="${eleve.id}"></span></td>
+            </tr>
+            <tr>
+              <th>Nom :</th>
+              <td th:text="${eleve.nom}"></td>
+            </tr>
+            <tr>
+              <th>Prénom :</th>
+              <td th:text="${eleve.prenom}"></td>
+            </tr>
+          </table>
+        </div>
+        <div class="col-md-6">
+          <table class="info-table">
+            <tr>
+              <th>Filière :</th>
+              <td>
+                                <span th:if="${eleve.filiere}" class="badge bg-info fs-6">
+                                    <i class="bi bi-diagram-3 me-1"></i>
+                                    <span th:text="${eleve.filiere.nom}"></span>
+                                    (<span th:text="${eleve.filiere.code}"></span>)
+                                </span>
+                <span th:unless="${eleve.filiere}"
+                      class="badge bg-warning fs-6">
+                                    Non assigné
+                                </span>
+              </td>
+            </tr>
+            <tr>
+              <th>Nombre de cours :</th>
+              <td>
+                                <span class="badge bg-secondary fs-6">
+                                    <i class="bi bi-journal-bookmark me-1"></i>
+                                    <span th:text="${#lists.size(eleve.coursSuivis)}"></span> cours
+                                </span>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dossier Administratif -->
+  <div th:if="${eleve.dossierAdministratif}" class="detail-card">
+    <div class="card-header">
+      <h4>
+        <i class="bi bi-folder-check me-2"></i>Dossier Administratif
+      </h4>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <div class="alert-success p-4">
+            <h5 class="d-flex align-items-center">
+              <i class="bi bi-card-checklist me-2"></i>
+              Numéro d'inscription
+            </h5>
+            <p class="display-6 text-center mb-2"
+               th:text="${eleve.dossierAdministratif.numeroInscription}">
+            </p>
+            <p class="text-center text-muted mb-0">
+              Format: FILIERE-ANNEE-ID
+            </p>
+          </div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <div class="alert-info p-4">
+            <h5 class="d-flex align-items-center">
+              <i class="bi bi-calendar-check me-2"></i>
+              Date de création
+            </h5>
+            <p class="display-6 text-center mb-2"
+               th:text="${eleve.dossierAdministratif.dateCreationFormatted}">
+            </p>
+            <p class="text-center text-muted mb-0">
+              Généré automatiquement
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Liste des cours suivis -->
+  <div class="detail-card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h4>
+        <i class="bi bi-journal-bookmark me-2"></i>Cours Suivis
+        <span class="badge bg-warning ms-2"
+              th:text="${#lists.size(eleve.coursSuivis)}"></span>
+      </h4>
+    </div>
+    <div class="card-body">
+      <div th:if="${#lists.isEmpty(eleve.coursSuivis)}"
+           class="empty-state">
+        <i class="bi bi-emoji-frown"></i>
+        <h5 class="mt-3 mb-2">Aucun cours suivi</h5>
+        <p>Cet élève n'est inscrit à aucun cours pour le moment.</p>
+      </div>
+
+      <div th:unless="${#lists.isEmpty(eleve.coursSuivis)}"
+           class="row">
+        <div th:each="cours : ${eleve.coursSuivis}"
+             class="col-md-6 mb-3">
+          <div class="course-card">
+            <h5>
+              <i class="bi bi-book me-2"></i>
+              <span th:text="${cours.code}"></span>
+            </h5>
+            <h6 class="text-muted mb-3"
+                th:text="${cours.intitule}"></h6>
+            <p class="mb-2">
+              <small>
+                <i class="bi bi-diagram-3 me-1"></i>
+                Filière :
+                <span th:if="${cours.filiere}"
+                      th:text="${cours.filiere.nom}"
+                      class="badge bg-info">
+                                </span>
+                <span th:unless="${cours.filiere}"
+                      class="badge bg-warning">
+                                    Non assigné
+                                </span>
+              </small>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Information sur la filière -->
+  <div th:if="${eleve.filiere}" class="detail-card">
+    <div class="card-header">
+      <h4>
+        <i class="bi bi-diagram-3 me-2"></i>Informations sur la Filière
+      </h4>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-8">
+          <h5 th:text="${eleve.filiere.nom}" class="mb-3"></h5>
+          <div class="row">
+            <div class="col-md-6">
+              <p class="mb-2">
+                <strong>Code :</strong>
+                <span class="badge bg-info ms-2"
+                      th:text="${eleve.filiere.code}"></span>
+              </p>
+              <p class="mb-2">
+                <strong>Nombre d'élèves :</strong>
+                <span class="badge bg-secondary ms-2"
+                      th:text="${#lists.size(eleve.filiere.eleves)}"></span>
+              </p>
+              <p class="mb-0">
+                <strong>Nombre de cours :</strong>
+                <span class="badge bg-secondary ms-2"
+                      th:text="${#lists.size(eleve.filiere.cours)}"></span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 d-flex align-items-center justify-content-end">
+          <a th:href="@{/filieres/details/{id}(id=${eleve.filiere.id})}"
+             class="btn btn-outline-info">
+            <i class="bi bi-arrow-right-circle me-2"></i>
+            Voir la filière
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
